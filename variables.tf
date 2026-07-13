@@ -13,14 +13,6 @@ EOT
     name   = string
     notes  = optional(string)
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_api_releases : (
-        v.notes == null || (length(v.notes) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_api_management_api_release's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -31,5 +23,8 @@ EOT
   #   source:    [from api.ValidateApiID] !ok
   # path: api_id
   #   source:    [from api.ValidateApiID] err != nil
+  # path: notes
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
